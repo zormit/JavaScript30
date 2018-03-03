@@ -74,6 +74,31 @@
  * https://stackoverflow.com/a/14101453, https://stackoverflow.com/a/27612019
  * => classList.add/remove
  */
+filterObjFor = function (keynum) {
+    return function (obj) {
+        return obj.dataset.key == keynum;
+    }
+}
+playSound = function(keynum) {
+    var sounds = Array.from(document.getElementsByTagName('audio'));
+    var sound = sounds.filter(filterObjFor(keynum));
+
+    if (sound.length == 1) {
+        // TODO this seems to block another, parallel playing.
+        sound[0].play();
+    }
+}
+highlight = function(keynum, add) {
+    var keys = Array.from(document.getElementsByClassName('key'));
+    var key = keys.filter(filterObjFor(keynum));
+    if (key.length == 1) {
+        if (add) {
+            key[0].classList.add("playing");
+        } else {
+            key[0].classList.remove("playing");
+        }
+    }
+}
 document.onkeydown = function (e) {
     var keynum;
 
@@ -83,24 +108,8 @@ document.onkeydown = function (e) {
         keynum = e.which;
     }
 
-    filterObjForKeynum = function (keynum) {
-            return function ( obj ) {
-                return obj.dataset.key == keynum;
-            }
-        }(keynum);
-    var sounds = Array.from(document.getElementsByTagName('audio'));
-    var sound = sounds.filter(filterObjForKeynum);
-
-    if (sound.length == 1) {
-        // TODO this seems to block another, parallel playing.
-        sound[0].play();
-    }
-
-    var keys = Array.from(document.getElementsByClassName('key'));
-    var key = keys.filter(filterObjForKeynum);
-    if (key.length == 1) {
-        key[0].classList.add("playing");
-    }
+    playSound(keynum);
+    highlight(keynum, true);
 }
 document.onkeyup = function (e) {
     var keynum;
@@ -111,17 +120,7 @@ document.onkeyup = function (e) {
         keynum = e.which;
     }
 
-    filterObjForKeynum = function (keynum) {
-            return function ( obj ) {
-                return obj.dataset.key == keynum;
-            }
-        }(keynum);
-
-    var keys = Array.from(document.getElementsByClassName('key'));
-    var key = keys.filter(filterObjForKeynum);
-    if (key.length == 1) {
-        key[0].classList.remove("playing");
-    }
+    highlight(keynum, false);
 }
 </script>
 
