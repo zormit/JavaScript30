@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS Drum Kit</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+  <div class="keys">
+    <div data-key="65" class="key">
+      <kbd>A</kbd>
+      <span class="sound">clap</span>
+    </div>
+    <div data-key="83" class="key">
+      <kbd>S</kbd>
+      <span class="sound">hihat</span>
+    </div>
+    <div data-key="68" class="key">
+      <kbd>D</kbd>
+      <span class="sound">kick</span>
+    </div>
+    <div data-key="70" class="key">
+      <kbd>F</kbd>
+      <span class="sound">openhat</span>
+    </div>
+    <div data-key="71" class="key">
+      <kbd>G</kbd>
+      <span class="sound">boom</span>
+    </div>
+    <div data-key="72" class="key">
+      <kbd>H</kbd>
+      <span class="sound">ride</span>
+    </div>
+    <div data-key="74" class="key">
+      <kbd>J</kbd>
+      <span class="sound">snare</span>
+    </div>
+    <div data-key="75" class="key">
+      <kbd>K</kbd>
+      <span class="sound">tom</span>
+    </div>
+    <div data-key="76" class="key">
+      <kbd>L</kbd>
+      <span class="sound">tink</span>
+    </div>
+  </div>
+
+  <audio data-key="65" src="sounds/clap.wav"></audio>
+  <audio data-key="83" src="sounds/hihat.wav"></audio>
+  <audio data-key="68" src="sounds/kick.wav"></audio>
+  <audio data-key="70" src="sounds/openhat.wav"></audio>
+  <audio data-key="71" src="sounds/boom.wav"></audio>
+  <audio data-key="72" src="sounds/ride.wav"></audio>
+  <audio data-key="74" src="sounds/snare.wav"></audio>
+  <audio data-key="75" src="sounds/tom.wav"></audio>
+  <audio data-key="76" src="sounds/tink.wav"></audio>
+
+<script>
+/* All the credits go to Stackoverflow:
+ * https://stackoverflow.com/a/1846704
+ * => "parsing" key press.
+ * https://stackoverflow.com/a/2880614
+ * => document.onkeydown
+ * https://stackoverflow.com/a/9419328
+ * => audio.play()
+ * https://stackoverflow.com/a/22754453
+ * => you shouldn't iterate over Collection, but here's how it would work.
+ * https://stackoverflow.com/a/13964186
+ * => filter on objects
+ * https://stackoverflow.com/a/222847
+ * => Array.from(htmlCollection)
+ * https://stackoverflow.com/a/14101453, https://stackoverflow.com/a/27612019
+ * => classList.add/remove
+ */
+document.onkeydown = function (e) {
+    var keynum;
+
+    if (window.event) { // IE
+        keynum = e.keyCode;
+    } else if (e.which) { // Netscape/Firefox/Opera
+        keynum = e.which;
+    }
+
+    filterObjForKeynum = function (keynum) {
+            return function ( obj ) {
+                return obj.dataset.key == keynum;
+            }
+        }(keynum);
+    var sounds = Array.from(document.getElementsByTagName('audio'));
+    var sound = sounds.filter(filterObjForKeynum);
+
+    if (sound.length == 1) {
+        // TODO this seems to block another, parallel playing.
+        sound[0].play();
+    }
+
+    var keys = Array.from(document.getElementsByClassName('key'));
+    var key = keys.filter(filterObjForKeynum);
+    if (key.length == 1) {
+        key[0].classList.add("playing");
+    }
+}
+document.onkeyup = function (e) {
+    var keynum;
+
+    if (window.event) { // IE
+        keynum = e.keyCode;
+    } else if (e.which) { // Netscape/Firefox/Opera
+        keynum = e.which;
+    }
+
+    filterObjForKeynum = function (keynum) {
+            return function ( obj ) {
+                return obj.dataset.key == keynum;
+            }
+        }(keynum);
+
+    var keys = Array.from(document.getElementsByClassName('key'));
+    var key = keys.filter(filterObjForKeynum);
+    if (key.length == 1) {
+        key[0].classList.remove("playing");
+    }
+}
+</script>
+
+
+</body>
+</html>
