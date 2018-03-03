@@ -84,19 +84,15 @@ playSound = function(keynum) {
     var sound = sounds.filter(filterObjFor(keynum));
 
     if (sound.length == 1) {
-        // TODO this seems to block another, parallel playing.
+        sound[0].currentTime = 0;
         sound[0].play();
     }
 }
-highlight = function(keynum, add) {
+highlight = function(keynum) {
     var keys = Array.from(document.getElementsByClassName('key'));
     var key = keys.filter(filterObjFor(keynum));
     if (key.length == 1) {
-        if (add) {
-            key[0].classList.add("playing");
-        } else {
-            key[0].classList.remove("playing");
-        }
+        key[0].classList.add("playing");
     }
 }
 document.onkeydown = function (e) {
@@ -109,19 +105,15 @@ document.onkeydown = function (e) {
     }
 
     playSound(keynum);
-    highlight(keynum, true);
+    highlight(keynum);
 }
-document.onkeyup = function (e) {
-    var keynum;
 
-    if (window.event) { // IE
-        keynum = e.keyCode;
-    } else if (e.which) { // Netscape/Firefox/Opera
-        keynum = e.which;
-    }
-
-    highlight(keynum, false);
+function removeTransition(e) {
+    if (e.propertyName !== 'transform') return;
+    e.target.classList.remove('playing');
 }
+const keys = Array.from(document.querySelectorAll('.key'));
+keys.forEach(key => key.addEventListener('transitionend', removeTransition));
 </script>
 
 
