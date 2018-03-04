@@ -75,19 +75,20 @@
 * https://stackoverflow.com/a/7188740
 * => setTimeout
 */
+const hourHand = document.querySelector(`.hour-hand`);
+const minHand = document.querySelector(`.min-hand`);
+const secondHand = document.querySelector(`.second-hand`);
+
 function tick() {
-    const hourHand = document.querySelector(`.hour-hand`);
-    const minHand = document.querySelector(`.min-hand`);
-    const secondHand = document.querySelector(`.second-hand`);
 
-    var d = new Date();
-    var secondsDeg = (d.getSeconds() / 60 * 360) + 90;
-    var minsDeg = (d.getMinutes() / 60 * 360) + 90;
-    var hoursDeg = ((d.getHours() % 12) / 60 * 360) + 90;
+    const now = new Date();
+    const secondsDeg = ((now.getSeconds()      / 60) * 360) + 90;
+    const minsDeg =    ((now.getMinutes()      / 60) * 360) + 90;
+    const hoursDeg =   (((now.getHours() % 12) / 60) * 360) + 90;
 
-    secondHand.style.transform = "rotate(" + secondsDeg + "deg)";
-    minHand.style.transform = "rotate(" + minsDeg + "deg)";
-    hourHand.style.transform = "rotate(" + hoursDeg + "deg)";
+    secondHand.style.transform = `rotate(${secondsDeg}deg)`;
+    minHand.style.transform =    `rotate(${minsDeg}deg)`;
+    hourHand.style.transform =   `rotate(${hoursDeg}deg)`;
 
     // call again in one second
     setTimeout(tick, 1000);
