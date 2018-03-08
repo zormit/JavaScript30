@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+      <li>Filter for a city</li>
+      <li>City, S<span class="hl">ta</span>te <span class="population">123123</span></li>
+      <li>or a state</li>
+    </ul>
+  </form>
+<script>
+const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+var cities;
+fetch(endpoint)
+  .then(response => response.json())
+  .then(json => cities=json);
+
+const suggestions = document.querySelector(".suggestions");
+
+function appendCity(c) {
+    const li = document.createElement("li");
+    li.innerHTML = `${c.city}, ${c.state} <span class="population">${c.population}</span>`;
+    suggestions.appendChild(li);
+}
+
+function typeahead(e) {
+    suggestions.innerHTML = "";
+    const found = cities.filter(c => c.city.includes(this.value)||c.state.includes(this.value));
+    found.forEach(c => appendCity(c));
+}
+
+const input = document.querySelector(".search");
+input.addEventListener('keyup', typeahead);
+
+
+</script>
+  </body>
+</html>
